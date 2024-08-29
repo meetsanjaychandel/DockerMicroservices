@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  listenerservice:
+    build:
+      context: ./
+      dockerfile: listenerservice/Dockerfile
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - app-network
+
+  receiverservice:
+    build:
+      context: ./
+      dockerfile: receiverservice/Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
